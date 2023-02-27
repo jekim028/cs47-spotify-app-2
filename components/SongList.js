@@ -3,25 +3,27 @@ import { Themes } from "../assets/Themes";
 import Song from "./Song";
 import Header from "./Header";
 
-const renderSong = ({item, index}) => (
+
+const renderSong = ({item}) => (
     <Song
-        index={index}
         imageUrl={item.imageUrl}
         songTitle={item.songTitle}
         songArtists={item.songArtists}
         albumName={item.albumName}
         duration={item.duration}
+        previewUrl={item.previewUrl}
+        externalUrl={item.externalUrl}
     />
 );
 
 const SongList = ({tracks}) => {
-    console.log({tracks});
+    console.log(tracks)
     return (
         <View style={styles.container}>
             <Header>{Header}</Header>
             <FlatList
                 data={tracks}
-                renderItem={(item, index) => renderSong(item, index)}
+                renderItem={(item, index) => renderSong(item)}
                 keyExtractor={(item) => item.id}
             />
         </View>

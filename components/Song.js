@@ -1,6 +1,11 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView, Pressable } from "react-native";
 import { Themes } from "../assets/Themes";
 import { millisToMinutesAndSeconds } from "../utils";
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
+import PreviewScreen from "../screens/PreviewScreen";
+import DetailsScreen from "../screens/DetailsScreen";
 
 const SongArtists = ({SongArtists}) => {
     return (
@@ -12,14 +17,41 @@ const SongArtists = ({SongArtists}) => {
     );
 };
 
-const Song = ({ index, imageUrl, songTitle, songArtists, albumName, duration }) => {
-    console.log({index});
+const PreviewScreenButton = (props) => {
+    const navigation = useNavigation();
+
+    return (
+        <Pressable
+            onPress={() => (
+                navigation.navigate('PreviewScreen')
+            )}>
+            <Ionicons name="play-circle" style={styles.playButton} size={20} />
+        </Pressable>
+    );
+};
+
+const Song = ({ imageUrl, songTitle, songArtists, albumName, duration, previewUrl, externalUrl }) => {
+    const navigation = useNavigation();
+    console.log(externalUrl);
+
     return (
         <View style={styles.song}>
-            <Text style={styles.index}>{index + 1}</Text>
+            <View style={styles.playBox}>
+                <Pressable
+                    onPress={() => (
+                        navigation.navigate('PreviewScreen', {url: previewUrl})
+                )}>
+                    <Ionicons name="play-circle" style={styles.playButton} size={20} />
+                </Pressable>
+            </View>
             <Image style={[styles.image, styles.albumCover]} source={{uri: imageUrl}}/>
             <View style={styles.songArtistContainer}>
-                <Text style={[styles.songTitle]} numberOfLines={1}>{songTitle}</Text>
+                <Pressable
+                    onPress={() => (
+                        navigation.navigate('DetailsScreen', {external_url: externalUrl})
+                )}>
+                    <Text style={[styles.songTitle]} numberOfLines={1}>{songTitle}</Text>
+                </Pressable>
                 <SongArtists SongArtists={songArtists} />
             </View>
             <Text style={[styles.albumName]} numberOfLines={1}>{albumName}</Text>
@@ -35,14 +67,16 @@ const styles = StyleSheet.create({
         padding: 5,
         alignItems: "center",
         width: '100%',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
     },
-    index: {
-        color: Themes.colors.gray,
+    playBox: {
+        justifyContent: 'center',
+        alignItems: 'center',
         flex: 0.05,
-        textAlign: 'center',
-        fontSize: 12,
-        margin: 1,
+        marginRight: 2
+    },
+    playButton: {
+        color: Themes.colors.spotify,
     },
     albumCover: {
         resizeMode: "contain",
@@ -64,7 +98,7 @@ const styles = StyleSheet.create({
     },
     albumName: {
         color: Themes.colors.white,
-        flex: 0.25,
+        flex: 0.22,
         fontSize: 12,
         margin: 5,
     },
@@ -72,7 +106,7 @@ const styles = StyleSheet.create({
         color: Themes.colors.gray,
         flex: 0.1,
         fontSize: 12,
-        margin: 5,
+        marginLeft: 2,
     },
   });
 
